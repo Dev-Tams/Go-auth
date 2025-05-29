@@ -2,31 +2,27 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"github.com/dev-tams/go-auth/auth"
 )
 
 func main() {
-	// Step 1: Hash a password
-	hashed, err := auth.HashPassword("my-secret")
-	if err != nil {
-		panic(err)
+	//Register
+	user, err := auth.RegisterUser("Tammy", "test@mail.com", "securepass")
+	if err != nil{
+		log.Fatal("Register error", err)
 	}
-	fmt.Println("Hashed password:", hashed)
+	fmt.Println("Registered User", user)
 
-	// Step 2: Verify login
-	err = auth.CheckPassword(hashed, "my-secret")
+	//Login
+	token, err := auth.Login("test@mail.com", "securepass")
 	if err != nil {
-		fmt.Println("Incorrect password")
-	} else {
-		fmt.Println("Password is correct")
-	}
-
-	token, err := auth.GenerateJWT("12345")
-	if err != nil {
-		panic(err)
+		log.Fatal("Login error:", err)
 	}
 	fmt.Println("JWT token:", token)
 
+
+	//validate JWT
 	userID, err := auth.ValidateJWT(token)
 	if err != nil {
 		fmt.Println("Token invalid:", err)

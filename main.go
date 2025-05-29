@@ -16,8 +16,22 @@ func main() {
 	// Step 2: Verify login
 	err = auth.CheckPassword(hashed, "my-secret")
 	if err != nil {
-		fmt.Println("❌ Incorrect password")
+		fmt.Println("Incorrect password")
 	} else {
-		fmt.Println("✅ Password is correct")
+		fmt.Println("Password is correct")
 	}
+
+	token, err := auth.GenerateJWT("12345")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("JWT token:", token)
+
+	userID, err := auth.ValidateJWT(token)
+	if err != nil {
+		fmt.Println("Token invalid:", err)
+	} else {
+		fmt.Println("Token valid for user ID:", userID)
+	}
+
 }

@@ -1,33 +1,19 @@
-package main
+	package main
 
-import (
-	"fmt"
-	"log"
-	"github.com/dev-tams/go-auth/auth"
-)
+	import (
+		"fmt"
+		"log"
+		"net/http"
+		"go-auth/profile"
+	)
 
-func main() {
-	//Register
-	user, err := auth.RegisterUser("Tammy", "test@mail.com", "securepass")
-	if err != nil{
-		log.Fatal("Register error", err)
-	}
-	fmt.Println("Registered User", user)
+	func main() {
 
-	//Login
-	token, err := auth.Login("test@mail.com", "securepass")
-	if err != nil {
-		log.Fatal("Login error:", err)
-	}
-	fmt.Println("JWT token:", token)
+		http.HandleFunc("/register", RegisterUser)
+		http.HandleFunc("/login", LoginUser)
+		http.HandleFunc("/profile", ProfileHandler)
 
-
-	//validate JWT
-	userID, err := auth.ValidateJWT(token)
-	if err != nil {
-		fmt.Println("Token invalid:", err)
-	} else {
-		fmt.Println("Token valid for user ID:", userID)
+		fmt.Println("✅ Server running at http://localhost:8080")
+		log.Fatal(http.ListenAndServe(":8080", nil))
 	}
 
-}

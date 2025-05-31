@@ -1,19 +1,13 @@
 package profile
 
-import(
-	"encoding/json"
+import (
 	"net/http"
-	"github.com/dev-tams/go-auth/auth"
+
 	"github.com/gin-gonic/gin"
+	"github.com/dev-tams/go-auth/auth"
 )
 
-func RegisterUser(w http.ResponseWriter, r *http.Request, c *gin.Context){
-	//check method
-	if r.Method != http.MethodPost{
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	
+func RegisterUser(c *gin.Context) {
 	var req struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`
@@ -25,15 +19,30 @@ func RegisterUser(w http.ResponseWriter, r *http.Request, c *gin.Context){
 		return
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil{
-		http.Error(w, "Invalid Body param", http.StatusBadRequest)
+	if req.Username == "" || req.Email == "" || req.Password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "All fields are required"})
 		return
 	}
 
+	
+	if len(req.Email) <= 5 {
+	c.JSON(http.StatusBadRequest, gin.H{"error": "Please provide a valid mail"})
+	return
+	}
+	
+	if len(req.Password) <= 7 {
+	c.JSON(http.StatusBadRequest, gin.H{"error": "Password too short"})
+	return
+}
+
+
+	// Register user
 	user, err := auth.RegisterUser(req.Username, req.Email, req.Password)
-	if err != nil{
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	json.NewEncoder(w).Encode(user)
+	// Success
+	c.JSON(http.StatusOK, user)
 }

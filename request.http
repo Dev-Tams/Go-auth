@@ -1,0 +1,23 @@
+###
+POST http://localhost:8080/register
+Accept: application/json
+Content-Type: application/json
+
+{
+    "username":"tami",
+    "email": "test@mail",
+    "password": "password"
+}
+
+
+###
+POST http://localhost:8080/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "test@mail",
+    "password": "password"
+}
+
+

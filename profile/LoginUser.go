@@ -2,11 +2,8 @@
 
 	import(
 		"encoding/json"
-		"fmt"
-		"log"
 		"net/http"
-		"strings"
-		"go-auth/auth"
+		"github.com/dev-tams/go-auth/auth"
 	)
 
 		func LoginUser(w http.ResponseWriter, r *http.Request){
@@ -25,7 +22,7 @@
 				return
 			}
 
-			token, err := auth.LoginUser(req.Email, req.Password)
+			token, err := auth.Login(req.Email, req.Password)
 			if err != nil {
 				http.Error(w, "Login failed", http.StatusUnauthorized)
 				return

@@ -4,8 +4,7 @@ import(
 	"encoding/json"
 	"net/http"
 	"strings"
-
-	"go-auth/auth"
+	"github.com/dev-tams/go-auth/auth"
 )
 
 func ProfileHandler(w http.ResponseWriter, r *http.Request){

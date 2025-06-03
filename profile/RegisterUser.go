@@ -24,6 +24,11 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
+	if !auth.IsValidEmail(req.Email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+		return
+	}
+
 	
 	if len(req.Email) <= 5 {
 	c.JSON(http.StatusBadRequest, gin.H{"error": "Please provide a valid mail"})

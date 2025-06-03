@@ -5,17 +5,17 @@ import (
 	"github.com/google/uuid"
 )
 
-type User struct {
-	ID       string
-	Username string
-	Email    string
-	Password string
-}
+// type User struct {
+// 	ID       string
+// 	Username string
+// 	Email    string
+// 	Password string
+// }
 
-var users = map[string]User{}
 
 func RegisterUser(username, email, password string) (User, error) {
-	if _, exists := users[email]; exists {
+	var existing User
+	if err := DB.Where("email = ?", email).First(&existing).Error; err == nil {
 		return User{}, errors.New("user already exists")
 	}
 
@@ -31,13 +31,13 @@ func RegisterUser(username, email, password string) (User, error) {
 		Password: hashed,
 	}
 
-	users[email] = user
+	DB.Create(&user)
 	return user, nil
 }
 
 func Login(email, password string) (string, error) {
-	user, exists := users[email]
-	if !exists {
+	var user User
+	if err := DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return "", errors.New("invalid email or password")
 	}
 

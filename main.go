@@ -1,15 +1,22 @@
-	package main
+package main
 
-	import (
-		"github.com/gin-gonic/gin"
-	 	"github.com/dev-tams/go-auth/profile"
-	)
+import (
+	"log"
 
-	func main() {
+	"github.com/dev-tams/go-auth/profile"
+	"github.com/dev-tams/go-auth/auth"
+	"github.com/gin-gonic/gin"
+)
 
-		r := gin.Default()
-		r.POST("/register", profile.RegisterUser)
-		r.POST("/login", profile.Login)
-		r.Run(":8080")
-	}
+func main() {
 
+	//init db
+	if err := auth.InitDB(); err != nil {
+        log.Fatal("Failed to connect to DB: ", err)
+    }
+
+	r := gin.Default()
+	r.POST("/register", profile.RegisterUser)
+	r.POST("/login", profile.Login)
+	r.Run(":8080")
+}
